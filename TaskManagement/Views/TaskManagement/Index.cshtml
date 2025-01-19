@@ -1,0 +1,69 @@
+﻿<h2>登入</h2>
+
+<form id="LoginForm" method="post">
+	<div class="form-horizontal">
+
+		<div class="form-group">
+			<label class="control-label col-md-2" for="Email">電子郵件</label>
+			<div class="col-md-10">
+				<input type="text" id="Email" name="Email" />
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="control-label col-md-2" for="PasswrodHash">密碼</label>
+			<div class="col-md-10">
+				<input id="PasswordHash" />
+				<span class="text-danger"></span>
+			</div>
+		</div>
+
+
+		<div class="form-group">
+			<div class="col-md-2">
+			</div>
+			<div class="col-md-10">
+				<input type="submit" id="saveBtn" value="登入" class="btn-default" />
+			</div>
+		</div>
+	</div>
+	<a asp-action="Register">還沒有帳號？點擊註冊</a>
+</form>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript">
+	$(document).ready(function () {
+		$("#LoginForm").on("submit", function (e) {
+			e.preventDefault(); // 取消表單的默認提交行為
+
+			// 清空錯誤訊息
+			$(".text-danger").text("");
+
+			// 取得表單資料
+			var data = {
+				Email: $("#Email").val(),
+				PasswordHash: $("#PasswordHash").val()
+			};
+
+			// 發送 AJAX 請求
+			$.ajax({
+				type: "POST",
+				url: "/TaskManagement/Login",
+				data: data,
+				dataType: "json",
+				success: function (response) {
+					if (response.success) {
+						alert(response.message);
+						window.location.href = "/TaskManagement/Task?userid=" + response.userid;
+					} else {
+						alert(response.message); // 顯示錯誤訊息
+					}
+				},
+				error: function (xhr, status, error) {
+					console.error("AJAX 發生錯誤:", error);
+					alert("系統發生錯誤，請稍後再試！");
+				}
+			});
+		});
+	});
+</script>

@@ -1,0 +1,80 @@
+﻿<h2>註冊</h2>
+
+<form id="registerForm" method="post">
+
+    <div class="form-horizontal">
+        <hr />
+        <div class="validation-summary-valid text-danger" data-valmsg-summary="true"></div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2" for="UserName">用戶名稱</label>
+            <div class="col-md-10">
+                <input type="text" id="UserName" name="UserName" required />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2" for="Email">電子郵件</label>
+            <div class="col-md-10">
+                <input type="text" id="Email" name="Email" required />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2" for="PasswordHash">密碼</label>
+            <div class="col-md-10">
+                <input type="text" id="PasswordHash" name="PasswordHash" required />
+                <span class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" id="saveBtn" value="註冊" class="btn-default" />
+            </div>
+        </div>
+    </div>
+</form>
+
+<div>
+    <a href="Index">回上一頁</a>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#registerForm").on("submit", function (e) {
+            e.preventDefault(); // 取消表單的默認提交行為
+
+            // 清空錯誤訊息
+            $(".text-danger").text("");
+
+            // 取得表單資料
+            var data = {
+                UserName: $("#UserName").val(),
+                Email: $("#Email").val(),
+                PasswordHash: $("#PasswordHash").val()
+            };
+
+            // 發送 AJAX 請求
+            $.ajax({
+                type: "POST",
+                url: "/TaskManagement/Register",
+                data: data,
+                dataType: "json",
+                success: function (response) {
+                    if (response.success) {
+                        alert(response.message);
+                        window.location.href = "/TaskManagement/Index"; // 跳轉到主頁
+                    } else {
+                        alert(response.message); // 顯示錯誤訊息
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("AJAX 發生錯誤:", error);
+                    alert("系統發生錯誤，請稍後再試！");
+                }
+            });
+        });
+    });
+</script>
