@@ -1,80 +1,82 @@
-﻿<h2>註冊</h2>
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
 
-<form id="registerForm" method="post">
+<h2 class="text-center mb-4">註冊</h2>
 
-    <div class="form-horizontal">
-        <hr />
-        <div class="validation-summary-valid text-danger" data-valmsg-summary="true"></div>
-
-        <div class="form-group">
-            <label class="control-label col-md-2" for="UserName">用戶名稱</label>
-            <div class="col-md-10">
-                <input type="text" id="UserName" name="UserName" required />
+<div class="container">
+    <form id="registerForm" method="post" class="form-horizontal">
+        <div class="form-group row mb-3">
+            <label class="col-md-3 col-form-label" for="UserName">用戶名稱</label>
+            <div class="col-md-9">
+                <input type="text" id="UserName" name="UserName" class="form-control" required />
             </div>
         </div>
 
-        <div class="form-group">
-            <label class="control-label col-md-2" for="Email">電子郵件</label>
-            <div class="col-md-10">
-                <input type="text" id="Email" name="Email" required />
+        <div class="form-group row mb-3">
+            <label class="col-md-3 col-form-label" for="Email">電子郵件</label>
+            <div class="col-md-9">
+                <input type="email" id="Email" name="Email" class="form-control" required />
             </div>
         </div>
 
-        <div class="form-group">
-            <label class="control-label col-md-2" for="PasswordHash">密碼</label>
-            <div class="col-md-10">
-                <input type="text" id="PasswordHash" name="PasswordHash" required />
-                <span class="text-danger"></span>
+        <div class="form-group row mb-3">
+            <label class="col-md-3 col-form-label" for="PasswordHash">密碼</label>
+            <div class="col-md-9">
+                <input type="password" id="PasswordHash" name="PasswordHash" class="form-control" required />
+                <span class="text-danger" id="passwordError"></span>
             </div>
         </div>
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" id="saveBtn" value="註冊" class="btn-default" />
+        <div class="form-group row mb-3">
+            <div class="col-md-3"></div>
+            <div class="col-md-9">
+                <input type="submit" id="saveBtn" value="註冊" class="btn btn-primary w-100" />
             </div>
         </div>
+    </form>
+
+    <div class="text-center">
+        <a href="@Url.Action("Index", "TaskManagement")" class="d-block">回上一頁</a>
     </div>
-</form>
-
-<div>
-    <a href="Index">回上一頁</a>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script type="text/javascript">
-    $(document).ready(function () {
-        $("#registerForm").on("submit", function (e) {
-            e.preventDefault(); // 取消表單的默認提交行為
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#registerForm").on("submit", function (e) {
+                e.preventDefault(); // 取消表單的默認提交行為
 
-            // 清空錯誤訊息
-            $(".text-danger").text("");
+                // 清空錯誤訊息
+                $("#passwordError").text("");
 
-            // 取得表單資料
-            var data = {
-                UserName: $("#UserName").val(),
-                Email: $("#Email").val(),
-                PasswordHash: $("#PasswordHash").val()
-            };
+                // 取得表單資料
+                var data = {
+                    UserName: $("#UserName").val(),
+                    Email: $("#Email").val(),
+                    PasswordHash: $("#PasswordHash").val()
+                };
 
-            // 發送 AJAX 請求
-            $.ajax({
-                type: "POST",
-                url: "/TaskManagement/Register",
-                data: data,
-                dataType: "json",
-                success: function (response) {
-                    if (response.success) {
-                        alert(response.message);
-                        window.location.href = "/TaskManagement/Index"; // 跳轉到主頁
-                    } else {
-                        alert(response.message); // 顯示錯誤訊息
+                // 發送 AJAX 請求
+                $.ajax({
+                    type: "POST",
+                    url: "/TaskManagement/Register",
+                    data: data,
+                    dataType: "json",
+                    success: function (response) {
+                        if (response.success) {
+                            alert(response.message);
+                            window.location.href = "/TaskManagement/Index"; // 跳轉到主頁
+                        } else {
+                            $("#passwordError").text(response.message); // 顯示錯誤訊息
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("AJAX 發生錯誤:", error);
+                        alert("系統發生錯誤，請稍後再試！");
                     }
-                },
-                error: function (xhr, status, error) {
-                    console.error("AJAX 發生錯誤:", error);
-                    alert("系統發生錯誤，請稍後再試！");
-                }
+                });
             });
         });
-    });
-</script>
+    </script>
+}

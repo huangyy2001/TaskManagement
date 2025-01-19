@@ -201,10 +201,13 @@
 				type: 'GET',
 				url: '/TaskManagement/GetTaskDetails/' + taskId,
 				success: function (data) {
+					var date = new Date(data.estimatedTime);  
+					var formattedDate = date.toISOString().split('T')[0];
+
 					$('#taskName').val(data.taskName);
 					$('#priority').val(data.priority);
 					$('#status').val(data.status);
-					$('#estimatedTime').val(data.estimatedTime);
+					$('#estimatedTime').val(formattedDate);
 					$('#taskId').val(taskId);
 
 					$('#taskModalLabel').text('編輯任務');
